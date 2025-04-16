@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Management</title>
+  <link rel="stylesheet" href="../assets/css/employee.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <h2><i class="fas fa-users"></i> Employee Management</h2>
+  </header>
+
+  <!-- Header Controls -->
+  <section class="header-controls">
+    <button class="btn" onclick="openEmployeeForm()">➕ Add Employee</button>
+    <button class="btn" onclick="generateMockData()">📦 Generate Data</button>
+    <button class="btn" onclick="exportEmployees()">📤 Export CSV</button>
+  </section>
+
+  <main>
+
+    <!-- Table Section -->
+    <section class="main-table">
+	<!-- Employee List and Search Box -->
+      <div class="employee-search">
+        <h3><i class="fas fa-user"></i> Employee List</h3>
+        <input type="text" id="searchEmployee" placeholder="🔎 Search by ID or Name">
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Photo</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="employeeTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Employee Modal -->
+  <div class="modal" id="employeeFormModal">
+    <div class="modal-content">
+      <h3 id="employeeModalTitle">Add Employee</h3>
+      <label for="employeeId">Employee ID</label>
+      <input type="text" id="employeeId">
+
+      <label for="employeeName">Name</label>
+      <input type="text" id="employeeName">
+
+      <label for="employeeDept">Department</label>
+      <input type="text" id="employeeDept">
+
+      <label for="employeePhoto">Photo</label>
+      <input type="file" id="employeePhoto" accept="image/*">
+
+      <input type="hidden" id="employeeEditIndex">
+
+      <div class="modal-actions">
+        <button class="btn-save" onclick="saveEmployee()">Save</button>
+        <button class="btn-cancel" onclick="toggleEmployeeModal(false)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <h3>Are you sure you want to delete this employee?</h3>
+      <div class="modal-actions">
+        <button class="btn-yes" onclick="deleteEmployee()">Yes, Delete</button>
+        <button class="btn-no" onclick="toggleDeleteModal(false)">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 RD Wash System.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.1/sql-wasm.js"></script>
+  <script type="module" src="../assets/js/employee.js"></script>
+</body>
+
+
+</html>
+

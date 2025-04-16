@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Uniform Management</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="uniform.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <h2><i class="fas fa-tshirt"></i> Uniform Management</h2>
+    </header>
+
+    <!-- CONTROLS -->
+    <section class="data-section">
+      <div class="header-controls">
+        <input type="text" id="searchUniform" placeholder="🔎 Search by Type, Size, or Color" />
+        <button type="button" class="btn btn-primary btn-add">
+          <i class="fas fa-plus"></i> Add Uniform
+        </button>
+        <button type="button" class="btn btn-primary btn-import">
+          <i class="fas fa-file-import"></i> Import CSV
+        </button>
+        <button type="button" class="btn btn-primary btn-export">
+          <i class="fas fa-file-export"></i> Export CSV
+        </button>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="main-table">
+      <div id="loadingOverlay" class="hidden">Loading...</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th><i class="fas fa-barcode"></i> ID</th>
+              <th><i class="fas fa-tshirt"></i> Type</th>
+              <th><i class="fas fa-ruler"></i> Size</th>
+              <th><i class="fas fa-palette"></i> Color</th>
+              <th><i class="fas fa-boxes-stacked"></i> Qty</th>
+              <th><i class="fas fa-image"></i> Photo</th>
+              <th><i class="fas fa-cogs"></i> Actions</th>
+            </tr>
+          </thead>
+          <tbody id="uniformTableBody"></tbody>
+        </table>
+      </div>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </div>
+
+  <!-- MODAL: ADD/EDIT -->
+  <div class="modal hidden" id="uniformModal">
+    <form class="modal-content" id="uniformForm">
+      <h3><i class="fas fa-plus"></i> Add Uniform</h3>
+      <div class="modal-body">
+        <!-- LEFT: Dropzone -->
+        <div class="modal-left">
+          <label><i class="fas fa-image"></i> Photo</label>
+          <div class="drop-zone" id="dropZone">
+            <p><i class="fas fa-cloud-upload-alt"></i> Drag & Drop or Click</p>
+            <input type="file" id="uniformPhoto" accept="image/*" hidden />
+            <img id="previewPhoto" class="preview-thumb" style="display: none;" />
+          </div>
+        </div>
+
+        <!-- RIGHT: Form Fields -->
+        <div class="modal-right">
+          <label for="uniformID"><i class="fas fa-barcode"></i> Uniform ID</label>
+          <input type="text" id="uniformID" name="uniformID" disabled />
+
+          <label for="uniformType"><i class="fas fa-tshirt"></i> Type</label>
+          <input type="text" id="uniformType" name="uniformType" placeholder="Enter Type" required />
+
+          <label for="uniformSize"><i class="fas fa-ruler"></i> Size</label>
+          <input type="text" id="uniformSize" name="uniformSize" placeholder="Enter Size" required />
+
+          <label for="uniformColor"><i class="fas fa-palette"></i> Color</label>
+          <input type="text" id="uniformColor" name="uniformColor" placeholder="Enter Color" required />
+
+          <input type="hidden" id="uniformQty" name="uniformQty" value="0" />
+
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-success btn-save">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button type="button" class="btn btn-danger btn-cancel" id="cancelBtn">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 RD Wash System.</p>
+  </footer>
+
+  <!-- JS MODULES -->
+  <script type="module" src="firebaseConfig.js"></script>
+  <script type="module" src="uniformModel.js"></script>
+  <script type="module" src="uniformView.js"></script>
+  <script type="module" src="uniformController.js"></script>
+</body>
+</html>

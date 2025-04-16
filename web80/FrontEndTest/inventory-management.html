@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory Management</title>
+
+  <!-- ✅ CSS -->
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="inventory.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- ✅ SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- 🔷 HEADER -->
+    <header class="header">
+      <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+    </header>
+
+    <!-- 📊 DASHBOARD -->
+    <section class="dashboard">
+      <div class="card available">
+        <i class="fas fa-shirt icon"></i>
+        <div class="info">
+          <div class="title">Available</div>
+          <div class="number" id="availableCount">0</div>
+        </div>
+      </div>
+      <div class="card assigned">
+        <i class="fas fa-user-check icon"></i>
+        <div class="info">
+          <div class="title">Assigned</div>
+          <div class="number" id="assignedCount">0</div>
+        </div>
+      </div>
+      <div class="card total">
+        <i class="fas fa-box icon"></i>
+        <div class="info">
+          <div class="title">Total</div>
+          <div class="number" id="totalCount">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🔍 SEARCH -->
+    <section class="data-section">
+      <div class="header-controls">
+        <input type="text" id="searchByUniformAndEmployee" placeholder="🔎 Search code / employee / uniform" />
+        <button id="btnExportReport" class="btn btn-primary">
+          <i class="fas fa-file-csv"></i> Export CSV
+        </button>
+        <button id="btnImportReport" class="btn btn-secondary">
+          <i class="fas fa-file-import"></i> Import CSV
+        </button>
+      </div>
+    </section>
+
+    <!-- 🧥 UNIFORM BASE CARDS -->
+    <section class="card-grid" id="uniformBaseList"></section>
+
+    <!-- 🔢 PAGINATION -->
+    <div id="pagination" class="pagination"></div>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 📋 CODE LIST MODAL -->
+  <div class="modal hidden" id="codeListModal">
+    <div class="modal-content">
+      <h3>Uniform Code Details</h3>
+      <div class="summary-section">
+        <p><strong>Uniform ID:</strong> <span id="detailUniformId">-</span></p>
+        <p><strong>Type:</strong> <span id="detailUniformType">-</span></p>
+        <p><strong>Size:</strong> <span id="detailUniformSize">-</span></p>
+        <p><strong>Color:</strong> <span id="detailUniformColor">-</span></p>
+      </div>
+      <div class="table-panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Uniform Code</th>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="codeListBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeCodeListModal()">❌ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ASSIGN MODAL -->
+  <div class="modal hidden" id="assignModal">
+    <div class="modal-content">
+      <h3>Assign Uniform</h3>
+      <form id="assignForm">
+        <p id="assignUniformInfo" style="font-weight:bold; color:#3a6ea5;"></p>
+        <label for="assignEmployeeId">Employee ID</label>
+        <input type="text" id="assignEmployeeId" required />
+        <label for="assignEmployeeName">Employee Name</label>
+        <input type="text" id="assignEmployeeName" readonly />
+        <label for="assignUniformCode">Uniform Code</label>
+        <input type="text" id="assignUniformCode" required />
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success">✅ Confirm</button>
+          <button type="button" class="btn btn-danger" onclick="closeAssignModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ➕ ADD CODE MODAL -->
+  <div class="modal hidden" id="codeModal">
+    <div class="modal-content">
+      <h3>Add Uniform Code</h3>
+      <form id="codeForm">
+        <input type="hidden" id="addCodeUniformId" />
+        <label for="addUniformCode">Uniform Code</label>
+        <input type="text" id="addUniformCode" required />
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success">💾 Save</button>
+          <button type="button" class="btn btn-danger" onclick="closeAddCodeModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 RD Wash System.</p>
+  </footer>
+
+  <!-- ✅ JS MODULES -->
+  <script type="module" src="firebaseConfig.js"></script>
+  <script type="module" src="inventoryModel.js"></script>
+  <script type="module" src="inventoryView.js"></script>
+  <script type="module" src="inventoryController.js"></script>
+</body>
+</html>
