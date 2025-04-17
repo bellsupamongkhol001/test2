@@ -61,13 +61,12 @@ export async function renderWashTable(
       <td>${w.color || "-"}</td>
       <td><span class=\"status ${getStatusClass(w)}\">${getStatusLabel(w)}</span></td>
       <td class=\"actions\">
-        <button class=\"delete\" data-id=\"${w.id}\">🗑️</button>
-        <button class=\"shift-date\" data-id=\"${w.id}\">🕒</button>
         ${
           showESD
             ? `<button class=\"esd-btn\" data-id=\"${w.id}\">🧪 ESD</button>`
             : ""
         }
+        <button class=\"delete\" data-id=\"${w.id}\">🗑️</button>
       </td>
     `;
     tableBody.appendChild(row);
@@ -114,27 +113,28 @@ export function getStatusClass(wash) {
   const status = wash.status;
 
   if (status === "Waiting to Send") {
-    return count === 0 ? "waiting" : "waiting-rewash";
+    return count === 0 ? "status-waiting" : "status-waiting-rewash";
   }
 
   if (status === "Washing") {
-    return count === 0 ? "washing" : "rewashing";
+    return count === 0 ? "status-washing" : "status-rewashing";
   }
 
-  if (status === "Completed") return "completed";
-  if (status === "ESD Passed") return "passed";
-  if (status === "Scrap") return "scrap";
-  if (status === "ESD Failed") return "failed";
+  if (status === "Completed") return "status-completed";
+  if (status === "ESD Passed") return "status-passed";
+  if (status === "ESD Failed") return "status-failed";
+  if (status === "Scrap") return "status-scrap";
 
   return "";
 }
+
 
 export function getStatusLabel(wash) {
   const count = wash.rewashCount || 0;
   const status = wash.status;
 
   if (status === "Waiting to Send") {
-    return count === 0 ? "Waiting to Send" : `Waiting Rewash #${count}`;
+    return count === 0 ? "Waiting to Send" : `Waiting-Rewash #${count}`;
   }
 
   if (status === "Washing") {
@@ -143,7 +143,6 @@ export function getStatusLabel(wash) {
 
   if (status === "Completed") return "Completed";
   if (status === "ESD Passed") return "ESD Passed";
-
   if (status === "ESD Failed") return `ESD Failed (${count} times)`;
   if (status === "Scrap") return "Scrap (Over limit)";
 
@@ -151,25 +150,17 @@ export function getStatusLabel(wash) {
 }
 
 
-
 // ============================ 🔢 PAGINATION ============================
 // สร้างปุ่ม pagination สำหรับตารางหลัก
-export function renderPagination(
-  totalItems,
-  currentPage,
-  rowsPerPage,
-  onPageChange
-) {
+export function renderPagination(totalItems, currentPage, rowsPerPage, onPageChange) {
   const pagination = document.getElementById("pagination");
   const totalPages = Math.ceil(totalItems / rowsPerPage);
-
   pagination.innerHTML = "";
 
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
     if (i === currentPage) btn.classList.add("active");
-
     btn.addEventListener("click", () => onPageChange(i));
     pagination.appendChild(btn);
   }

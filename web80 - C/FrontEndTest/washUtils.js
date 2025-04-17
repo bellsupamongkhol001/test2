@@ -63,14 +63,20 @@ export function showToast(message = "Action completed!", type = "success") {
   
   // ✅ สร้าง ID อัตโนมัติ เช่น WASH-20250407-001
   export function generateWashId(prefix = "WASH") {
-    const date = new Date();
-    const yymmdd = date
-      .toISOString()
-      .slice(2, 10)
-      .replace(/-/g, "");
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-    return `${prefix}-${yymmdd}-${random}`;
+    const now = new Date();
+  
+    const y = now.getFullYear().toString().slice(2); // YY
+    const m = (now.getMonth() + 1).toString().padStart(2, "0"); // MM
+    const d = now.getDate().toString().padStart(2, "0"); // DD
+  
+    const datePart = `${y}${m}${d}`;
+    const randomPart = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
+  
+    return `${prefix}-${datePart}-${randomPart}`;
   }
+  
   
   // ✅ แสดง Modal แบบ confirm (callback)
   export function showConfirmModal(message, onConfirm) {

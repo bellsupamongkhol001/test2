@@ -164,7 +164,7 @@ async function saveWashJob() {
     }
 
     const rewashCount = await getRewashCount(uniformCode, color);
-    const washId = `WASH-${Date.now()}`;
+    const washId = generateWashId();
 
     if (rewashCount > 3) {
       const scrapData = {
@@ -179,7 +179,7 @@ async function saveWashJob() {
       return;
     }
 
-    const status = rewashCount > 0 ? `Waiting Rewash #${rewashCount}` : "Waiting to Send";
+    const status = rewashCount > 0 ? `Waiting-Rewash #${rewashCount}` : "Waiting to Send";
     if (rewashCount > 0) await setRewashCount(uniformCode, color, rewashCount);
 
     const newWash = {
@@ -360,7 +360,7 @@ export async function checkAndUpdateWashStatus(wash) {
   let newStatus = "";
   if (diffInDays >= 3) newStatus = "Completed";
   else if (diffInDays >= 1) newStatus = count === 0 ? "Washing" : `Re-Washing #${count}`;
-  else newStatus = count === 0 ? "Waiting to Send" : `Waiting Rewash #${count}`;
+  else newStatus = count === 0 ? "Waiting to Send" : `Waiting-Rewash #${count}`;
 
   if (newStatus !== wash.status) {
     wash.status = newStatus;
