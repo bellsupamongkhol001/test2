@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Management</title>
+  <link rel="stylesheet" href="../assets/css/inventory.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- 🔷 HEADER -->
+  <header class="header">
+    <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+  </header>
+
+  <!-- ✅ MAIN CONTENT ONLY (NO DASHBOARD SUMMARY) -->
+  <main class="inventory-section">
+
+    <!-- Header Controls -->
+    <section class="list-controls">
+      <h3><i class="fas fa-boxes-stacked"></i> Inventory List</h3>
+      <div class="list-actions">
+        <input type="text" id="searchByUniformAndEmployee" placeholder="🔎 Search uniform / employee / code" />
+        <button id="btnExportReport" class="btn-export">📥 Export CSV</button>
+      </div>
+    </section>
+
+    <!-- ✅ Summary Section -->
+    <section class="summary-cards" id="summaryCards" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 20px;">
+      <!-- JS จะ inject รายการรวม Available / Washing / Scrap -->
+    </section>
+
+    <!-- ✅ Card View -->
+    <section class="card-grid" id="inventoryList">
+      <!-- Cards will be dynamically injected by JS -->
+    </section>
+  </main>
+
+  <!-- 🔷 MODALS -->
+  <div class="modal" id="codeModal">
+    <div class="modal-content">
+      <h3>Add Uniform Code</h3>
+      <form id="codeForm">
+        <input type="hidden" id="addCodeUniformId" />
+        <label for="addUniformCode">Uniform Code</label>
+        <input type="text" id="addUniformCode" required />
+        <div class="modal-actions">
+          <button type="submit" class="btn-save">💾 Save</button>
+          <button type="button" class="btn-cancel" onclick="closeAddCodeModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="codeListModal">
+    <div class="modal-content">
+      <h3>Uniform Code Details</h3>
+  
+      <div class="table-panel">
+        <table>
+          <thead>
+            <tr>
+              <th>UniformCode</th>
+              <th>Color</th>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="codeListBody"></tbody>
+        </table>
+      </div>
+  
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeCodeListModal()">❌ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔷 MODAL: Assign Uniform -->
+  <div class="modal" id="assignModal">
+    <div class="modal-content">
+      <h3>Assign Uniform</h3>
+      <form id="assignForm">
+        <label for="assignEmployeeId">Employee ID</label>
+        <input type="text" id="assignEmployeeId" placeholder="Enter employee ID" required />
+
+        <label for="assignEmployeeName">Employee Name</label>
+        <input type="text" id="assignEmployeeName" placeholder="Auto-filled" readonly />
+
+        <div class="modal-actions">
+          <button type="submit" class="btn-save">✅ Confirm</button>
+          <button type="button" class="btn-cancel" onclick="closeAssignModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- 🔷 FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 RD Wash System.</p>
+  </footer>
+
+  <!-- 🔷 SCRIPT -->
+  <script type="module" src="../assets/js/inventory.js"></script>
+</body>
+</html>

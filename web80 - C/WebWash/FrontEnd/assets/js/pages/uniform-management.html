@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uniform Management</title>
+  <link rel="stylesheet" href="../assets/css/uniform.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- 🔷 HEADER -->
+  <header class="header">
+    <h2><i class="fas fa-tshirt"></i> Uniform Management</h2>
+  </header>
+
+  <!-- 🔷 HEADER CONTROLS -->
+  <section class="header-controls">
+    <button class="btn" onclick="openUniformForm()">➕ Add Uniform</button>
+    <button class="btn" onclick="generateUniformMock()">📦 Generate Data</button>
+  </section>
+
+  <!-- 🔷 UNIFORM LIST -->
+  <main>
+    <section class="main-table">
+      <div class="uniform-list">
+        <div class="uniform-search">
+          <h3><i class="fas fa-list"></i> Uniform List</h3>
+          <input type="text" id="searchUniform" placeholder="🔎 Search by Name or Size" />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Uniform Name</th>
+              <th>Size</th>
+              <th>Color</th>
+              <th>Photo</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="uniformTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- 🔷 MODAL FORM -->
+  <div class="modal" id="uniformModal">
+    <div class="modal-content">
+      <h3 id="uniformModalTitle">Add / Edit Uniform</h3>
+
+      <label for="uniformId">Uniform ID</label>
+      <input type="text" id="uniformId" readonly />
+      
+      <label for="uniformName">Uniform Name</label>
+      <input type="text" id="uniformName" required />
+      
+      <label for="size">Size</label>
+      <input type="text" id="size" required />
+      
+      <label for="color">Color</label>
+      <input type="text" id="color" required />
+      
+      <input type="number" id="qty" value="0" hidden/>
+
+      <label for="uniformPhoto">Photo</label>
+      <input type="file" id="uniformPhoto" />
+      <div class="modal-actions">
+        <button class="btn-save" onclick="saveUniform(event)">💾 Save</button>
+        <button class="btn-cancel" onclick="toggleUniformModal(false)">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔷 DELETE MODAL -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <h3>Are you sure you want to delete this uniform?</h3>
+      <div class="modal-actions">
+        <button class="btn-yes" onclick="deleteUniform()">✅ Yes, Delete</button>
+        <button class="btn-no" onclick="toggleDeleteModal(false)">❌ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔷 FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 RD Wash System.</p>
+  </footer>
+
+  <!-- 🔷 SCRIPT -->
+  <script type="module" src="../assets/js/uniform.js"></script>
+</body>
+</html>

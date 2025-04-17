@@ -1,0 +1,414 @@
+/* ==================== UNIFORM MANAGEMENT PAGE ==================== */
+
+/* ==================== GLOBAL ==================== */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fa;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h2, h3 {
+  margin-bottom: 0.5rem;
+  color: #3a6ea5;
+  font-size: 1.4rem;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.header h2 {
+  font-size: 1.8rem;
+}
+
+.header h2 i {
+  margin-right: 8px;
+  color: #3a6ea5;
+}
+
+/* ==================== HEADER CONTROLS ==================== */
+.header-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+input, button, select {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #fff;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus, button:focus {
+  border-color: #3a6ea5;
+}
+
+.btn {
+  background: #3a6ea5;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #345e8b;
+  transform: translateY(-1px);
+}
+
+/* ==================== UNIFORM LIST AND SEARCH ==================== */
+.uniform-list {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.uniform-list h3 {
+  color: #3a6ea5;
+  margin-bottom: 12px;
+}
+
+.uniform-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.uniform-search input {
+  width: 300px;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+/* ==================== MAIN TABLE ==================== */
+.main-table {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.main-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.main-table th, .main-table td {
+  padding: 14px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.main-table th {
+  background: #3a6ea5;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.main-table td {
+  background: #fafafa;
+}
+
+.main-table td img {
+  max-width: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* ==================== MODAL ==================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  animation: slideUp 0.3s ease;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #3a6ea5;
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #43a047;
+}
+
+.btn-cancel:hover {
+  background-color: #e53935;
+}
+
+/* ==================== DELETE MODAL ==================== */
+#deleteModal .modal-actions {
+  justify-content: center;
+}
+
+.btn-yes {
+  background: #dc3545;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+}
+
+.btn-no {
+  background: #6c757d;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+.actions button {
+  margin: 0 4px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  border: none;
+}
+
+.actions .edit {
+  background-color: #ffc107;
+  color: white;
+}
+
+.actions .edit:hover {
+  background-color: #e0a800;
+  transform: scale(1.05);
+}
+
+.actions .delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.actions .delete:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* สำหรับหน้าจอที่กว้างไม่เกิน 1366px (แท็บเล็ต/แล็ปท็อปขนาดเล็ก) */
+  @media (max-width: 1366px) {
+    .header h2 {
+      font-size: 1.5rem; /* ลดขนาดหัวข้อ */
+    }
+    
+    .header-controls {
+      gap: 8px; /* ลดระยะห่างของปุ่ม */
+    }
+
+    .uniform-search input {
+      width: 250px; /* ลดขนาดช่องค้นหา */
+    }
+
+    .main-table table th, .main-table table td {
+      font-size: 0.9rem; /* ลดขนาดฟอนต์ของตาราง */
+    }
+
+    .actions button {
+      font-size: 0.85rem; /* ลดขนาดปุ่ม */
+      padding: 6px 12px;  /* ลดขนาดปุ่ม */
+    }
+
+    .actions .edit, .actions .delete {
+      transform: scale(1.02); /* ขยายปุ่มเล็กน้อยเมื่อ hover */
+    }
+
+    .modal-content {
+      padding: 20px;
+    }
+  
+    .modal-content input[type="text"],
+    .modal-content input[type="number"],
+    .modal-content input[type="file"] {
+      font-size: 1rem; /* ลดขนาดฟอนต์ให้พอดีกับหน้าจอ */
+    }
+  }
+
+  /* สำหรับหน้าจอที่กว้างไม่เกิน 1024px (แท็บเล็ต) */
+  @media (max-width: 1024px) {
+    .header h2 {
+      font-size: 1.3rem; /* ลดขนาดหัวข้อ */
+    }
+    
+    .uniform-search input {
+      width: 200px; /* ลดช่องค้นหาลง */
+    }
+
+    .uniform-list {
+      flex-direction: column; /* เปลี่ยนการแสดงเป็นคอลัมน์ */
+    }
+
+    .main-table table {
+    font-size: 0.9rem; /* ลดขนาดฟอนต์ */
+  }
+
+  .main-table th, .main-table td {
+    padding: 10px; /* ลดขนาด padding */
+  }
+
+  .actions button {
+    font-size: 0.75rem; /* ลดขนาดฟอนต์ปุ่ม */
+    padding: 5px 10px;  /* ลดขนาดปุ่ม */
+  }
+
+  .modal-content {
+    padding: 15px; /* ลด padding */
+    width: 100%; /* ให้ฟอร์มขยายเต็มหน้าจอ */
+  }
+
+  .modal-content input[type="text"],
+  .modal-content input[type="number"],
+  .modal-content input[type="file"] {
+    font-size: 0.95rem; /* ลดขนาดฟอนต์ */
+    padding: 10px; /* ลดขนาด padding */
+  }
+}
+
+/* สำหรับหน้าจอที่กว้างไม่เกิน 768px (สมาร์ทโฟน) */
+@media (max-width: 768px) {
+  .header h2 {
+    font-size: 1.2rem; /* ลดขนาดหัวข้อ */
+  }
+
+  .header-controls {
+    flex-direction: column; /* วางปุ่มแบบคอลัมน์ */
+    align-items: flex-start;
+  }
+
+  .uniform-search input {
+    width: 100%; /* ทำให้ช่องค้นหากว้างเต็ม */
+  }
+
+  .uniform-list h3 {
+    font-size: 1.2rem; /* ขยายขนาดหัวข้อ */
+  }
+
+  .main-table table {
+    width: 100%; /* ให้ตารางขยายเต็มความกว้าง */
+  }
+
+  .main-table th, .main-table td {
+    font-size: 0.85rem; /* ลดขนาดฟอนต์ */
+    padding: 8px; /* ลดขนาด padding */
+  }
+
+  .actions button {
+    font-size: 0.7rem; /* ลดขนาดฟอนต์ปุ่ม */
+    padding: 4px 8px;  /* ลดขนาดปุ่ม */
+  }
+
+  .modal-content {
+    padding: 10px; /* ลด padding ให้พอดีกับหน้าจอ */
+    width: 100%; /* ให้ฟอร์มขยายเต็มหน้าจอ */
+    max-width: 100%; /* ทำให้ฟอร์มเต็มขนาดหน้าจอ */
+  }
+
+  .modal-content input[type="text"],
+  .modal-content input[type="number"],
+  .modal-content input[type="file"] {
+    font-size: 0.9rem; /* ลดขนาดฟอนต์ */
+    padding: 8px; /* ลดขนาด padding */
+  }
+
+  .modal-actions {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .btn-save, .btn-cancel {
+    width: 100%; /* ทำให้ปุ่มกว้างเต็มจอ */
+    padding: 12px 0; /* เพิ่มความสูงของปุ่ม */
+  }
+}

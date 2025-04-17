@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RD-WASH System</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">🧼 RD-WASH</div>
+    <nav class="nav">
+      <ul>
+        <li><a href="#" data-page="dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-page="wash" class="nav-link active"><i class="fas fa-soap"></i> Wash</a></li>
+        <li><a href="#" data-page="employee" class="nav-link"><i class="fas fa-user"></i> Employee</a></li>
+        <li><a href="#" data-page="uniform" class="nav-link"><i class="fas fa-tshirt"></i> Uniform</a></li>
+        <li><a href="#" data-page="inventory" class="nav-link"><i class="fas fa-boxes"></i> Inventory</a></li>
+        <li><a href="#" data-page="report" class="nav-link"><i class="fas fa-file-alt"></i> Report</a></li>
+        <li><a href="#" data-page="backup" class="nav-link"><i class="fas fa-database"></i> Backup</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Layout -->
+  <div class="main-content">
+    <!-- 🔁 dynamic content (like wash.html) will be injected here -->
+    <main id="main-content" class="container">
+      <!-- Dynamic Page Content Loaded Here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 RD Wash System. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div id="globalLoader" class="linear-loader" style="display:none;">
+    <div class="loader-bar"></div>
+    <p id="loaderMessage">Loading...</p>
+  </div>
+
+  <!-- JS -->
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

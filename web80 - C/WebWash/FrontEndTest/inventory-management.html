@@ -1,0 +1,144 @@
+<!-- 🔷 HEADER -->
+<header class="header">
+  <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+</header>
+
+<!-- 📊 DASHBOARD SUMMARY -->
+<section class="dashboard">
+  <div class="card available">
+    <i class="fas fa-shirt icon"></i>
+    <div class="info">
+      <div class="title">Available</div>
+      <div class="number" id="availableCount">0</div>
+    </div>
+  </div>
+
+  <div class="card assigned">
+    <i class="fas fa-user-check icon"></i>
+    <div class="info">
+      <div class="title">Assigned</div>
+      <div class="number" id="assignedCount">0</div>
+    </div>
+  </div>
+
+  <div class="card total">
+    <i class="fas fa-box icon"></i>
+    <div class="info">
+      <div class="title">Total</div>
+      <div class="number" id="totalCount">0</div>
+    </div>
+  </div>
+</section>
+
+<main class="inventory-section">
+  <section class="data-section">
+    <div class="header-controls">
+      <h3><i class="fas fa-boxes-stacked"></i> Inventory List</h3>
+      <div class="control-table">
+        <input
+          type="text"
+          id="searchByUniformAndEmployee"
+          placeholder="🔎 Search uniform / employee / code"
+        />
+        <button id="btnExportReport" class="btn-export">
+          <i class="fas fa-file-csv">
+          Export CSV
+          </i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <!-- Section: Card Grid -->
+  <section class="card-grid" id="inventoryList"></section>
+</main>
+
+<!-- Section: Modals (All modals stay the same, you can copy from your code) -->
+<div class="modal" id="codeModal">
+  <div class="modal-content">
+    <h3>Add Uniform Code</h3>
+    <form id="codeForm">
+      <input type="hidden" id="addCodeUniformId" />
+      <label for="addUniformCode">Uniform Code</label>
+      <input type="text" id="addUniformCode" required />
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">💾 Save</button>
+        <button type="button" class="btn-cancel" onclick="closeAddCodeModal()">
+          ❌ Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="codeListModal">
+  <div class="modal-content">
+    <h3>Uniform Code Details</h3>
+    <div class="table-panel">
+      <table>
+        <thead>
+          <tr>
+            <th>UniformCode</th>
+            <th>Color</th>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="codeListBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCodeListModal()">
+        ❌ Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 🔷 MODAL: Assign Uniform -->
+<div class="modal" id="assignModal">
+  <div class="modal-content">
+    <h3>Assign Uniform</h3>
+    <form id="assignForm">
+      <label for="assignEmployeeId">Employee ID</label>
+      <input
+        type="text"
+        id="assignEmployeeId"
+        placeholder="Enter employee ID"
+        required
+      />
+
+      <label for="assignEmployeeName">Employee Name</label>
+      <input
+        type="text"
+        id="assignEmployeeName"
+        placeholder="Auto-filled"
+        readonly
+      />
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-save">✅ Confirm</button>
+        <button type="button" class="btn-cancel" onclick="closeAssignModal()">
+          ❌ Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Section: Footer -->
+<footer class="footer">
+  <p>&copy; 2025 RD Wash System.</p>
+</footer>
+
+<link rel="stylesheet" href="global.css" />
+<link rel="stylesheet" href="inventory.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<script type="module" src="firebaseConfig.js"></script>
+
+<script type="module" src="inventory.js"></script>

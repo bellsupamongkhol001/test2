@@ -1,0 +1,524 @@
+/* ==================== INVENTORY MANAGEMENT PAGE ==================== */
+
+/* ==================== GLOBAL ==================== */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fa;
+  margin: 0;
+  padding: 16px;
+  color: #333;
+}
+
+h2, h3 {
+  margin-bottom: 0.5rem;
+  color: #3a6ea5;
+  font-size: 1.4rem;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.header h2 {
+  font-size: 1.6rem;
+}
+
+.header h2 i {
+  margin-right: 8px;
+  color: #3a6ea5;
+}
+
+/* ==================== LIST CONTROLS ==================== */
+.list-controls {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.list-controls h3 {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  color: #3a6ea5;
+  margin: 0;
+}
+
+.list-controls h3 i {
+  margin-right: 6px;
+}
+
+.list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.list-actions input {
+  width: 260px;
+  height: 30px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.list-actions input:focus {
+  outline: none;
+  border-color: #3a6ea5;
+  box-shadow: 0 0 0 2px rgba(58,110,165,0.2);
+}
+
+/* ==================== BUTTON ==================== */
+.btn,
+.btn-export,
+.btn-add {
+  background: #3a6ea5;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn:hover,
+.btn-export:hover,
+.btn-add:hover {
+  background: #345e8b;
+  transform: translateY(-1px);
+}
+
+/* ==================== CARD GRID ==================== */
+.card-grid {
+  padding: 12px;
+  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+}
+
+.inventory-card {
+  background: linear-gradient(to bottom, #ffffff, #f9fbfd);
+  border: 1px solid #dce3ec;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  max-width: 180px;
+  margin: auto;
+  font-size: 0.85rem;
+  gap: 6px;
+  transition: transform 0.2s ease;
+}
+
+.inventory-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.inventory-card img {
+  width: 100px;
+  height: 145px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  background-color: #f2f2f2;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.inventory-card h4 {
+  font-size: 13px;
+  margin: 0;
+  color: #3a6ea5;
+  font-weight: 600;
+}
+
+.inventory-card p {
+  margin: 2px 0;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  color: #444;
+}
+
+/* ปุ่มในแต่ละการ์ด */
+.actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  background-color: #3a6ea5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.actions button:hover {
+  background-color: #2f568c;
+}
+
+/* ==================== UNIFORM DETAIL TABLE ==================== */
+#codeListModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#codeListModal.show {
+  display: flex;
+}
+
+#codeListModal .modal-content {
+  max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  width: 100%;
+  padding: 24px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+#codeListModal .table-panel {
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: 65vh;
+  padding: 8px;
+  background: #fcfdff;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#codeListModal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+#codeListModal th,
+#codeListModal td {
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#codeListModal thead {
+  background-color: #e8f0fe;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#codeListModal tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+#codeListModal tbody tr:hover {
+  background-color: #f1faff;
+}
+
+#codeListModal .modal-actions {
+  justify-content: center;
+  padding-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+/* ==================== ACTION BUTTONS IN MODAL TABLE ==================== */
+#codeListModal td button {
+  background-color: #3a6ea5;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s ease;
+}
+
+#codeListModal td button:hover {
+  background-color: #345e8b;
+}
+
+#codeListModal td button:nth-child(1) {
+  background-color: #2196f3; /* Assign */
+}
+
+#codeListModal td button:nth-child(2) {
+  background-color: #ff9800; /* Return */
+}
+
+#codeListModal td button:last-child {
+  background-color: #f44336; /* Delete */
+}
+
+#codeListModal td button:nth-child(1):hover {
+  background-color: #1976d2;
+}
+
+#codeListModal td button:nth-child(2):hover {
+  background-color: #fb8c00;
+}
+
+#codeListModal td button:last-child:hover {
+  background-color: #e53935;
+}
+
+
+
+/* ==================== MODALS ==================== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-content h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #3a6ea5;
+}
+
+.modal-content label {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: #444;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="email"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.modal-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-save {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-save:hover {
+  background-color: #43a047;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-cancel:hover {
+  background-color: #e53935;
+}
+
+/* ==================== ASSIGN MODAL ==================== */
+#assignModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+#assignModal .modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s ease;
+}
+
+#assignModal h3 {
+  margin-top: 0;
+  color: #3a6ea5;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+#assignModal form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#assignModal input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+#assignModal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+#assignModal button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+#assignModal .btn-save {
+  background-color: #4caf50;
+  color: white;
+}
+
+#assignModal .btn-save:hover {
+  background-color: #43a047;
+}
+
+#assignModal .btn-cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+#assignModal .btn-cancel:hover {
+  background-color: #e53935;
+}
+
+/* ==================== POPUP ALERT ==================== */
+.popup-alert {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #fff;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease, fadeOut 0.3s ease 2.2s;
+  pointer-events: none;
+}
+
+/* ✅ ALERT TYPES */
+.popup-alert.success {
+  background-color: #4caf50; /* เขียว */
+}
+
+.popup-alert.error {
+  background-color: #f44336; /* แดง */
+}
+
+.popup-alert.warning {
+  background-color: #ff9800; /* ส้ม */
+}
+
+.popup-alert.info {
+  background-color: #3a6ea5; /* ฟ้า */
+}
+
+/* ✅ Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+

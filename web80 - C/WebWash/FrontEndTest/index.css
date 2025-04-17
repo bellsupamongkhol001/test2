@@ -1,0 +1,100 @@
+body {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #1f3a5f;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .logo {
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #162d4b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #fff;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.nav-link i {
+  width: 20px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #2e4a7f;
+  cursor: pointer;
+}
+
+/* Layout */
+.main-content {
+  margin-left: 220px;
+  width: calc(100% - 220px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f7fa;
+}
+
+/* Header */
+.main-header {
+  background-color: #ffffff;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info button {
+  background: none;
+  color: #333;
+  font-size: 18px;
+}
+
+/* Footer */
+.footer {
+  background-color: #f0f0f0;
+  color: #666;
+  text-align: center;
+  padding: 12px;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+  font-size: 14px;
+}
+
+
