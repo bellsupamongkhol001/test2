@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RD-WASH System</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="assets/css/wash.css" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">🧼 RD-WASH</div>
+    <nav class="nav">
+      <ul>
+        <li><a href="#" data-page="dashboard" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-page="wash" class="nav-link"><i class="fas fa-soap"></i> Wash</a></li>
+        <li><a href="#" data-page="employee" class="nav-link"><i class="fas fa-user"></i> Employee</a></li>
+        <li><a href="#" data-page="uniform" class="nav-link"><i class="fas fa-tshirt"></i> Uniform</a></li>
+        <li><a href="#" data-page="inventory" class="nav-link"><i class="fas fa-boxes"></i> Inventory</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <main id="main-content"></main> <!-- เนื้อหาที่โหลดมา -->
+  </div>
+
+  <!-- Global Loader -->
+  <div id="globalLoader" class="linear-loader" style="display: none;">
+    <div class="loader-bar"></div>
+    <p id="loaderMessage">Loading...</p>
+  </div>
+
+  <!-- JavaScript Module -->
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>
