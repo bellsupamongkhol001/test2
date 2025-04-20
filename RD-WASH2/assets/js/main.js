@@ -50,7 +50,7 @@ async function loadPage(page = "dashboard") {
         initUniformPage();
         break;
       case "inventory":
-        const { initInventoryPage } = await import("/assets/js/Controllers/inventoryController.js");
+        const { initInventoryPage } = await import("./Controllers/inventoryController.js");
         loadPageStyle(page)
         initInventoryPage();
         break;

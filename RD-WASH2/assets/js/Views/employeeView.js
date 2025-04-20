@@ -1,4 +1,3 @@
-// 📁 assets/js/views/employeeView.js
 import { EmployeeModel } from "../Models/employeeModel.js";
 
 const DEFAULT_PROFILE =
@@ -22,7 +21,11 @@ export const EmployeeView = {
     tableWrapper?.classList.remove("hidden");
 
     if (!employees || employees.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#888; padding:20px;">🚫 No data found</td></tr>`;
+      tbody.innerHTML = `<tr>
+        <td colspan="5" style="text-align:center; color:#888; padding:20px;">
+          🚫 No data found
+        </td>
+      </tr>`;
       this.renderPagination(0);
       return;
     }
@@ -61,7 +64,6 @@ export const EmployeeView = {
       tbody.appendChild(tr);
     });
 
-    // 🧩 Bind Events
     document.querySelectorAll(".btn.action-btn.edit").forEach((btn) => {
       btn.addEventListener("click", () =>
         window.handleEditById?.(btn.dataset.id)
@@ -77,7 +79,6 @@ export const EmployeeView = {
     this.renderPagination(employees.length);
   },
 
-  // ========================== 🔢 PAGINATION ==========================
   renderPagination(totalItems) {
     const container = document.getElementById("pagination");
     if (!container) return;
@@ -88,6 +89,7 @@ export const EmployeeView = {
       const btn = document.createElement("button");
       btn.textContent = i;
       btn.classList.add("pagination-btn");
+
       if (i === this.currentPage) btn.classList.add("active");
       btn.onclick = () => {
         this.currentPage = i;
@@ -97,10 +99,13 @@ export const EmployeeView = {
     }
   },
 
-  // ========================== 📄 FORM & MODAL ==========================
   resetForm() {
-    ["employeeId", "employeeName", "employeeDept", "employeePhoto"].forEach(
-      (id) => {
+    [
+      "employeeId",
+      "employeeName",
+      "employeeDept",
+      "employeePhoto"
+    ].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.value = "";
       }
@@ -118,12 +123,18 @@ export const EmployeeView = {
 
   toggleModal(id, show = true) {
     const modal = document.getElementById(id);
-    if (modal) modal.classList.toggle("hidden", !show);
+    if (!modal) {
+      console.warn(`⚠️ toggleModal: ไม่พบ modal ที่มี id = "${id}"`);
+      return;
+    }
+    modal.classList.toggle("hidden", !show);
   },
 
   setModalTitle(title = "Add Employee", icon = "fas fa-user-plus") {
     const titleEl = document.querySelector("#employeeFormModal h3");
-    if (titleEl) titleEl.innerHTML = `<i class="${icon}"></i> ${title}`;
+    if (titleEl) {
+      titleEl.innerHTML = `<i class="${icon}"></i> ${title}`;
+    }
   },
 
   setFormLoading(isLoading = false) {
@@ -134,7 +145,7 @@ export const EmployeeView = {
       ? '<i class="fas fa-spinner fa-spin"></i> Saving...'
       : '<i class="fas fa-save"></i> Save';
   },
-  // ========================== 🖼️ DROPZONE & PREVIEW ==========================
+
   showPreviewImage(file) {
     const preview = document.getElementById("previewPhoto");
     if (!file || !preview) return (preview.style.display = "none");
@@ -146,6 +157,7 @@ export const EmployeeView = {
     };
     reader.readAsDataURL(file);
   },
+
   initDropzone() {
     const dropZone = document.getElementById("dropZone");
     const inputFile = document.getElementById("employeePhoto");
@@ -212,7 +224,18 @@ export const EmployeeView = {
 
 // ============================== 🌐 GLOBAL TRIGGER ==============================
 window.reloadEmployeeTable = async () => {
-  EmployeeView.showLoading();
-  const employees = await EmployeeModel.fetchAllEmployees();
-  EmployeeView.renderTable(employees);
+  try{
+    EmployeeView.setFormLoading(true);
+    const employees = await EmployeeModel.fetchAllEmployees();
+    EmployeeView.renderTable(employees);
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      icon: "error",
+      title: "เกิดข้อผิดพลาด",
+      text: err.message || "ไม่สามารถโหลดข้อมูลได้",
+    });
+  } finally {
+    EmployeeView.setFormLoading(false);
+  }
 };

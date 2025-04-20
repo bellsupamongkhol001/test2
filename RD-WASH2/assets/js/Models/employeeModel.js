@@ -32,20 +32,26 @@ async function fetchAllEmployees() {
  * @param {string} employeeId - รหัสพนักงาน
  * @returns {Promise<Object|null>} ข้อมูลพนักงาน หรือ null ถ้าไม่พบ
  */
-async function fetchEmployeeById(employeeId) {
-  const docSnap = await getDoc(doc(db, COLLECTION_NAME, employeeId));
-  return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
+export async function fetchEmployeeById(id) {
+  if (!id) return null;
+  const snap = await getDoc(doc(db, "EmployeesDB", id));
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
+
 
 /**
  * สร้างข้อมูลพนักงานใหม่ (ใช้ ID ที่กรอกเป็น doc ID)
  * @param {Object} employeeData - ข้อมูลพนักงานใหม่
  */
-async function createEmployee(employeeData) {
-  const id = employeeData.employeeId?.trim();
-  if (!id) throw new Error("⚠️ Employee ID is required");
-  await setDoc(doc(db, COLLECTION_NAME, id), employeeData);
+export async function createEmployee(data) {
+  const docRef = doc(db, "EmployeesDB", data.employeeId);
+  const snapshot = await getDoc(docRef);
+  if (snapshot.exists()) {
+    throw new Error(`Employee ID ${data.employeeId} already exists`);
+  }
+  await setDoc(docRef, data);
 }
+
 
 /**
  * อัปเดตข้อมูลพนักงานจากรหัส

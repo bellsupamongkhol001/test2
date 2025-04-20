@@ -87,6 +87,7 @@ h3 {
   transition: border 0.3s ease, box-shadow 0.3s ease;
   text-align: left;
 }
+
 .header-controls input::placeholder {
   text-align: right;
 }
@@ -159,7 +160,6 @@ h3 {
   box-shadow: none;
 }
 
-/* 🎨 THEME COLORS */
 .btn-primary {
   background: #007bff;
   color: white;
@@ -192,7 +192,6 @@ h3 {
   background: #5a6268;
 }
 
-/* 🎨 Extra Styling (optional) */
 .btn-outline {
   background: transparent;
   color: #3a6ea5;
@@ -264,7 +263,6 @@ h3 {
   animation: fadeIn 0.4s ease;
 }
 
-/* ==================== 📋 TABLE ==================== */
 .table-wrapper table {
   width: 100%;
   border-collapse: collapse;
@@ -272,7 +270,6 @@ h3 {
   font-size: 0.85rem;
 }
 
-/* ==================== HEADER ==================== */
 .table-wrapper th {
   background: #3a6ea5;
   color: white;
@@ -283,7 +280,6 @@ h3 {
   border-bottom: 1px solid #ddd;
 }
 
-/* ==================== CELLS ==================== */
 .table-wrapper td {
   padding: 12px;
   text-align: center;
@@ -294,7 +290,6 @@ h3 {
   transition: background-color 0.2s ease;
 }
 
-/* ==================== IMAGE ==================== */
 .table-wrapper td img {
   width: 35px;
   height: 35px;
@@ -308,12 +303,10 @@ h3 {
   transform: scale(1.1);
 }
 
-/* ==================== ROW HOVER ==================== */
 .table-wrapper tbody tr:hover {
   background-color: #f0f7ff;
 }
 
-/* ==================== RESPONSIVE FONT ==================== */
 @media (max-width: 768px) {
   .table-wrapper table {
     min-width: 100%;
@@ -331,7 +324,6 @@ h3 {
   }
 }
 
-/* ==================== ✨ FADE IN ANIMATION ==================== */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -442,6 +434,7 @@ h3 {
   cursor: pointer;
   transition: color 0.2s ease;
 }
+
 .modal .close:hover {
   color: #000;
 }
@@ -587,4 +580,8 @@ h3 {
   padding: 1rem 1.5rem;
   box-sizing: border-box;
   margin: 0 auto;
+}
+
+.swal2-container {
+  z-index: 99999 !important;
 }
