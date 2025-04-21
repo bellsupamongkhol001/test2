@@ -64,25 +64,21 @@ export const InventoryView = {
       card.innerHTML = `
         <div class="card-header"><strong>${uniform.uniformID}</strong></div>
         <div class="card-body">
-          ${
-            showImage
-              ? `<img src="${uniform.img}" width="80" style="border-radius:8px;margin-bottom:8px;border:1px solid #ccc;" />`
-              : `<div style="width:80px;height:80px;background:#eee;border-radius:8px;
-                        display:flex;align-items:center;justify-content:center;
-                        color:#888;font-size:0.8rem;margin-bottom:8px;border:1px solid #ccc;">
-                  No Picture
-                 </div>`
-          }
-          <p><strong>Type:</strong> ${uniform.uniformType}</p>
-          <p><strong>Size:</strong> ${uniform.uniformSize}</p>
-          <p><strong>Color:</strong> ${uniform.uniformColor}</p>
-          <p><strong>Total Codes:</strong> ${codeCount}</p>
+          ${showImage
+            ? `<img src="${uniform.img}" alt="Uniform" />`
+            : `<div class="uniform-placeholder">No Picture</div>`}
+          <div class="card-details-grid">
+            <p><strong>Type:</strong> ${uniform.uniformType}</p>
+            <p><strong>Size:</strong> ${uniform.uniformSize}</p>
+            <p><strong>Color:</strong> ${uniform.uniformColor}</p>
+            <p><strong>Qty:</strong> ${codeCount}</p>
+          </div>
         </div>
         <div class="card-footer">
           <button class="btn btn-primary btn-add-code" data-id="${uniform.uniformID}">➕ Add Code</button>
           <button class="btn btn-secondary btn-detail" data-id="${uniform.uniformID}">📄 Detail</button>
         </div>
-      `;
+        `;
       container.appendChild(card);
     }
 
