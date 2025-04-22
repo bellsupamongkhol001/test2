@@ -1,0 +1,108 @@
+/* ==================== ROOT VARIABLES ==================== */
+:root {
+  --sidebar-width: 220px;
+  --primary-color: #3a6ea5;
+  --primary-dark: #2e4a7f;
+  --background-main: #f5f7fa;
+  --text-light: #fff;
+  --text-dark: #333;
+  --shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  --main-margin: 20px;
+}
+
+/* ==================== RESET ==================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0; /* ลบ margin ทั้งหมด */
+  padding: 0; /* ลบ padding ทั้งหมด */
+  overflow: hidden; /* ป้องกันการเลื่อนทั้งหน้า */
+}
+
+/* ==================== LAYOUT ==================== */
+body {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%; /* ทำให้ body ขยายเต็มขอบหน้าจอ */
+  overflow: hidden; /* ป้องกันการเลื่อนทั้งหน้า */
+}
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  padding-top: 20px;
+}
+
+.sidebar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: var(--primary-color);
+  padding: 20px;
+}
+
+/* ==================== NAVIGATION ==================== */
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: var(--text-light);
+  font-size: 16px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.nav-link i {
+  width: 20px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: var(--primary-dark);
+  cursor: pointer;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+  margin-left: var(--sidebar-width); /* ให้มีระยะห่างจาก sidebar */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* ขยายให้เต็มพื้นที่หน้าจอ */
+  background-color: var(--background-main);
+
+  overflow: auto; /* ให้เลื่อนเนื้อหาภายในเมื่อมีมาก */
+}
+
+#main-content {
+  flex-grow: 1;
+  overflow-y: auto;  /* เลื่อนจากด้านนอก */
+  overflow-x: hidden; /* ป้องกันการ scroll แนวนอน */
+}
+
+
