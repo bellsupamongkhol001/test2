@@ -2,6 +2,10 @@
 import {
   doc,
   updateDoc,
+  query,            
+  where,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { db } from "../firebase/firebaseConfig.js";
 
@@ -41,38 +45,29 @@ import {
 import { showToast } from "../Utils/toast.js";
 
 import { debounce, safeGet } from "../Utils/globalUtils.js";
-// ============================ 🔄 INITIALIZATION ============================
 
 let currentPage = 1;
 const rowsPerPage = 10;
 
-/**
- * โหลดข้อมูลและเริ่มต้นหน้า Wash Page
- * - ดึงข้อมูล Wash และ History
- * - ตรวจสอบสถานะล่าสุดของแต่ละรายการ
- * - แสดงผล Table, Dashboard, และ History
- */
+let currentWashes = [];
+
 export async function initWashPage() {
   try {
     showLoading("🔄 กำลังโหลดข้อมูลหน้า Wash...");
 
-    // 🧩 Bind Events
     setupEventListeners();
 
-    // 📥 ดึงข้อมูลทั้งหมด
     const [rawWashes, historyData] = await Promise.all([
       getAllWashes(),
       getAllWashHistory(),
     ]);
 
-    // 🔍 ตรวจสอบสถานะล่าสุดของแต่ละงานซัก
-    const updatedWashes = await Promise.all(
+    currentWashes = await Promise.all(
       rawWashes.map(checkAndUpdateWashStatus)
     );
 
-    // 🎯 แสดงผลบนหน้าจอ
-    renderWashTable(updatedWashes);
-    renderWashSummary(updatedWashes);
+    renderWashTable(currentWashes);
+    renderWashSummary(currentWashes);
     renderWashHistory(historyData);
   } catch (error) {
     console.error("❌ Error loading Wash page:", error);
@@ -82,18 +77,14 @@ export async function initWashPage() {
   }
 }
 
-// ============================ 🎯 EVENT LISTENERS ============================
 
 function setupEventListeners() {
-  // 🔍 Search & Filter
   safeGet("searchInput")?.addEventListener("input", debounce(renderWashTable, 300));
   safeGet("filterStatus")?.addEventListener("change", renderWashTable);
 
-  // 💾 Save & Add
   safeGet("btnSaveWash")?.addEventListener("click", saveWashJob);
   safeGet("btnAddWash")?.addEventListener("click", openAddWashModal);
 
-  // 🔁 Autofill
   safeGet("uniformCode")?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -102,20 +93,17 @@ function setupEventListeners() {
   });
   safeGet("color")?.addEventListener("change", autofillEmployeeInfo);
 
-  // ❌ Close Modal
   safeGet("btnCloseModal")?.addEventListener("click", () => toggleModal(false));
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") toggleModal(false);
   });
 
-  // 📤 Export CSV
   safeGet("btnExportWashHistoryCSV")?.addEventListener(
     "click",
     exportWashHistoryToCSV
   );
   safeGet("btnExportCSV")?.addEventListener("click", exportWashToCSV);
 
-  // 🧪 Handle ESD Fail (Delegated)
   document.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn-esd-fail")) {
       const id = e.target.dataset.id;
@@ -125,12 +113,6 @@ function setupEventListeners() {
   
 }
 
-// ============================ 🧼 FORM & MODAL ============================
-
-/**
- * เปิดหรือปิด Modal การเพิ่ม/แก้ไขงานซัก
- * @param {boolean} show - true = เปิด, false = ปิด
- */
 function toggleModal(show) {
   const modal = document.getElementById("washModal");
   if (!modal) return;
@@ -139,9 +121,6 @@ function toggleModal(show) {
   if (!show) clearWashForm();
 }
 
-/**
- * เคลียร์ข้อมูลในฟอร์มทั้งหมดเมื่อปิด Modal
- */
 function clearWashForm() {
   const inputIds = ["empId", "empName", "uniformCode", "editIndex", "size"];
 
@@ -157,23 +136,14 @@ function clearWashForm() {
   }
 }
 
-// ============================ 🆕 ADD / EDIT WASH ============================
-
-/**
- * เปิด Modal เพิ่มงานซักใหม่ พร้อมตั้งค่าชื่อหัวข้อ
- */
 export function openAddWashModal() {
-  clearWashForm(); // ✅ เคลียร์ข้อมูลก่อน
+  clearWashForm();
   const modal = document.getElementById("washModal");
   const title = document.getElementById("modalTitle");
   if (title) title.textContent = "Add Wash Job";
   if (modal) modal.style.display = "flex";
 }
 
-/**
- * เปิด Modal แก้ไขงานซัก พร้อมโหลดข้อมูลเดิม
- * @param {string} id - รหัสเอกสารที่ต้องการแก้ไข
- */
 export async function openEditWashModal(id) {
   const data = await getWashJobById(id);
   if (!data) return alert("❌ ไม่พบข้อมูล");
@@ -195,30 +165,38 @@ export async function openEditWashModal(id) {
   toggleModal(true);
 }
 
-// ============================ 💾 SAVE WASH ============================
 async function saveWashJob() {
+  const saveBtn = document.getElementById("btnSaveWash");
+  if (saveBtn) saveBtn.disabled = true;
+
   const uniformCode = document.getElementById("uniformCode")?.value.trim();
   const color = document.getElementById("color")?.value;
-  const empId = document.getElementById("empId")?.value.trim();
-  const empName = document.getElementById("empName")?.value.trim();
+  const empIdRaw = document.getElementById("empId")?.value.trim();
+  const empNameRaw = document.getElementById("empName")?.value.trim();
   const size = document.getElementById("size")?.value.trim() || "";
 
-  if (!uniformCode || !color || !empId) {
+  const empId = empIdRaw || "-";
+  const empName = empNameRaw || "-";
+
+  if (!uniformCode || !color) {
     showToast("กรุณากรอกข้อมูลให้ครบ", "warning");
+    if (saveBtn) saveBtn.disabled = false;
     return;
   }
 
   try {
     showLoading("🔄 ตรวจสอบและบันทึก...");
 
-    // 🔁 ตรวจสอบ Duplicate
-    const allWashes = await getAllWashes();
-    const duplicate = allWashes.find(
-      (w) =>
-        w.uniformCode === uniformCode &&
-        w.color === color &&
-        !["ESD Passed", "Scrap"].includes(w.status)
+    const q = query(
+      collection(db, "WashJobs"),
+      where("uniformCode", "==", uniformCode),
+      where("color", "==", color)
     );
+    const snap = await getDocs(q);
+    const duplicate = snap.docs.find(doc => {
+      const d = doc.data();
+      return !["ESD Passed", "Scrap"].includes(d.status);
+    });
     if (duplicate) {
       showToast("ยูนิฟอร์มรหัสนี้กำลังอยู่ระหว่างการซัก", "error");
       return;
@@ -227,7 +205,6 @@ async function saveWashJob() {
     const washId = await generateWashId();
     const rewashCount = await getRewashCount(uniformCode, color);
 
-    // 🛑 ถ้าซักเกิน 3 ครั้ง → ทำลาย
     if (rewashCount > 3) {
       const scrapData = {
         washId,
@@ -248,7 +225,6 @@ async function saveWashJob() {
       return;
     }
 
-    // ✅ เตรียมข้อมูล + สถานะ
     const status =
       rewashCount > 0 ? `Waiting-Rewash #${rewashCount}` : "Waiting to Send";
 
@@ -271,7 +247,6 @@ async function saveWashJob() {
     await addWashJob(washData, washId);
     toggleModal(false);
 
-    // 🔄 อัปเดตข้อมูลใหม่
     const updatedWashes = await getAllWashes();
     renderWashTable(updatedWashes);
     renderWashSummary(updatedWashes);
@@ -282,10 +257,12 @@ async function saveWashJob() {
     showToast("เกิดข้อผิดพลาดในการบันทึก", "error");
   } finally {
     hideLoading();
+    if (saveBtn) saveBtn.disabled = false;
   }
 }
 
-// ============================ 🗑️ DELETE WASH ============================
+
+
 export function confirmDeleteWash(id) {
   confirmDeleteModal(id, async (confirmedId) => {
     try {
@@ -293,7 +270,6 @@ export function confirmDeleteWash(id) {
 
       const wash = await getWashJobById(confirmedId);
 
-      // 🟡 หากสถานะเป็น Waiting → ปรับสถานะยูนิฟอร์มกลับไป in-use
       if (wash?.status?.includes("Waiting")) {
         const matched = await getUniformByCode(wash.uniformCode, wash.color);
         if (matched.length > 0) {
@@ -304,11 +280,10 @@ export function confirmDeleteWash(id) {
         }
       }
 
-      // 🧼 ลบงานซัก และอัปเดตตาราง
       await deleteWashJob(confirmedId);
-      const updated = await getAllWashes();
-      renderWashTable(updated);
-      renderWashSummary(updated);
+
+      const rowEl = document.querySelector(`button.delete[data-id="${confirmedId}"]`)?.closest("tr");
+      if (rowEl) rowEl.remove();
 
       showToast("ลบข้อมูลเรียบร้อยแล้ว", "success");
     } catch (error) {
@@ -320,20 +295,24 @@ export function confirmDeleteWash(id) {
   });
 }
 
-// ============================ 🧠 AUTO-FILL ============================
+const uniformCache = {};
 
 async function autofillUniformInfo() {
-  const code = document.getElementById("uniformCode").value.trim();
+  const code = document.getElementById("uniformCode")?.value.trim();
   const sizeInput = document.getElementById("size");
   const colorSelect = document.getElementById("color");
 
   if (!code) return;
 
   try {
-    const uniforms = await getUniformByCode(code);
+    let uniforms = uniformCache[code];
 
-    // ❌ ถ้าไม่พบยูนิฟอร์ม
-    if (!uniforms.length) {
+    if (!uniforms) {
+      uniforms = await getUniformByCode(code);
+      uniformCache[code] = uniforms; 
+    }
+
+    if (!uniforms || uniforms.length === 0) {
       showToast("ไม่พบยูนิฟอร์มรหัสนี้ในระบบ", "error");
       sizeInput.value = "";
       colorSelect.innerHTML = '<option value="">No Color Available</option>';
@@ -341,10 +320,8 @@ async function autofillUniformInfo() {
       return;
     }
 
-    // ✅ กรอกขนาดอัตโนมัติ
     sizeInput.value = uniforms[0].UniformSize || "";
 
-    // 🎨 สร้างรายการสีแบบไม่ซ้ำ
     const uniqueColors = [...new Set(uniforms.map((u) => u.UniformColor))];
     colorSelect.innerHTML = '<option value="">Select Color</option>';
     uniqueColors.forEach((color) => {
@@ -361,18 +338,26 @@ async function autofillUniformInfo() {
   }
 }
 
+const employeeCache = {};
+
 async function autofillEmployeeInfo() {
-  const code = document.getElementById("uniformCode").value.trim();
-  const color = document.getElementById("color").value;
+  const code = document.getElementById("uniformCode")?.value.trim();
+  const color = document.getElementById("color")?.value;
+
+  if (!code || !color) return;
 
   try {
     const matches = await getUniformByCode(code, color);
 
     if (matches.length > 0) {
       const u = matches[0];
-      document.getElementById("empId").value = u.EmployeeID || "";
-      document.getElementById("empName").value = u.EmployeeName || "";
+      document.getElementById("empId").value = u.EmployeeID || "-";
+      document.getElementById("empName").value = u.EmployeeName || "-";
       document.getElementById("size").value = u.UniformSize || "";
+    } else {
+      document.getElementById("empId").value = "-";
+      document.getElementById("empName").value = "-";
+      document.getElementById("size").value = "";
     }
   } catch (error) {
     console.error("❌ Error in autofillEmployeeInfo:", error);
@@ -380,12 +365,20 @@ async function autofillEmployeeInfo() {
   }
 }
 
-// ============================ ✅ ESD RESULT ============================
+
+const washJobCache = {};
 
 export async function handleESDRequest(id) {
   try {
     showLoading("🔍 ตรวจสอบ ESD...");
-    const data = await getWashJobById(id);
+
+    let data = washJobCache[id];
+
+    // 📦 ถ้ายังไม่เคยโหลด
+    if (!data) {
+      data = await getWashJobById(id);
+      washJobCache[id] = data;
+    }
 
     if (!data || data.status !== "Completed") {
       showToast("ไม่พบข้อมูลหรือยังไม่อยู่ในสถานะ Completed", "warning");
@@ -412,13 +405,15 @@ export async function markAsESDPass(washData) {
       status: "ESD Passed",
     };
 
-    await setRewashCount(washData.uniformCode, washData.color, 0);
+    if ((washData.rewashCount ?? 0) > 0) {
+      await setRewashCount(washData.uniformCode, washData.color, 0);
+    }
+
     await addToWashHistory(updatedData);
     await returnToStockAfterESD(updatedData);
 
-    const washes = await getAllWashes();
-    await renderWashTable(washes);
-    await renderWashSummary(washes);
+    renderWashTableRow?.(updatedData); 
+    updateWashSummaryCache?.(updatedData);
 
     showToast("ESD ผ่านเรียบร้อย", "success");
   } catch (err) {
@@ -433,10 +428,7 @@ export async function markAsESDFail(washData) {
   try {
     showLoading("⛔ บันทึกผล ESD ไม่ผ่าน...");
 
-    const currentCount = await getRewashCount(
-      washData.uniformCode,
-      washData.color
-    );
+    const currentCount = washData.rewashCount ?? 0;
     const newCount = currentCount + 1;
 
     const failData = {
@@ -447,12 +439,21 @@ export async function markAsESDFail(washData) {
     };
 
     await addToWashHistory(failData);
+
     await deleteWashJob(washData.washId);
-    await setRewashCount(washData.uniformCode, washData.color, newCount);
+
+    if (newCount <= 3) {
+      await setRewashCount(washData.uniformCode, washData.color, newCount);
+    }
 
     if (newCount > 3) {
       await scrapUniform(washData.uniformCode, washData.color);
     }
+
+    removeWashRowFromTable?.(washData.washId);
+    updateWashSummaryCache?.();
+
+    showToast("ESD ไม่ผ่าน - ดำเนินการเรียบร้อย", "warning");
   } catch (err) {
     console.error("❌ markAsESDFail error:", err);
     showToast("เกิดข้อผิดพลาดในการบันทึก ESD ไม่ผ่าน", "error");
@@ -464,11 +465,13 @@ export async function markAsESDFail(washData) {
 export async function handleESDTestFail(washData) {
   try {
     showLoading("⛔ ประมวลผล ESD ไม่ผ่าน...");
+
     await markAsESDFail(washData);
 
-    const washes = await getAllWashes();
-    await renderWashTable(washes);
-    await renderWashSummary(washes);
+    const row = document.querySelector(`[data-id="${washData.washId}"]`)?.closest("tr");
+    if (row) row.remove();
+
+      updateWashSummaryCache?.();
 
     showToast("ESD ไม่ผ่าน - ดำเนินการเรียบร้อย", "warning");
   } catch (err) {
@@ -478,8 +481,6 @@ export async function handleESDTestFail(washData) {
     hideLoading();
   }
 }
-
-// ============================ 🔁 AUTO UPDATE STATUS ============================
 
 export async function checkAndUpdateWashStatus(wash) {
   if (!wash?.createdAt || ["Scrap", "ESD Passed"].includes(wash.status)) {
@@ -491,27 +492,24 @@ export async function checkAndUpdateWashStatus(wash) {
   const daysElapsed = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
   const rewashCount = wash.rewashCount || 0;
 
-  let updatedStatus = wash.status;
+  let newStatus;
 
   if (daysElapsed >= 3) {
-    updatedStatus = "Completed";
+    newStatus = "Completed";
   } else if (daysElapsed >= 1) {
-    updatedStatus =
-      rewashCount === 0 ? "Washing" : `Re-Washing #${rewashCount}`;
+    newStatus = rewashCount === 0 ? "Washing" : `Re-Washing #${rewashCount}`;
   } else {
-    updatedStatus =
-      rewashCount === 0 ? "Waiting to Send" : `Waiting-Rewash #${rewashCount}`;
+    newStatus = rewashCount === 0 ? "Waiting to Send" : `Waiting-Rewash #${rewashCount}`;
   }
 
-  if (updatedStatus !== wash.status) {
-    wash.status = updatedStatus;
-    await updateWashJob(wash.id, { status: updatedStatus });
+  if (newStatus !== wash.status) {
+    console.log(`🔁 Status changed: ${wash.status} → ${newStatus}`);
+    await updateWashJob(wash.id, { status: newStatus });
+    wash.status = newStatus;
   }
 
   return wash;
 }
-
-// ============================ 📅 SHIFT WASH DATE ============================
 
 export async function shiftWashDate(washId, days) {
   try {
@@ -526,13 +524,20 @@ export async function shiftWashDate(washId, days) {
     const shiftedDate = new Date(originalDate);
     shiftedDate.setDate(originalDate.getDate() + days);
 
+    if (originalDate.toISOString() === shiftedDate.toISOString()) {
+      showToast("ไม่ได้มีการเปลี่ยนวันที่", "info");
+      return;
+    }
+
     await updateWashJob(washId, {
       createdAt: shiftedDate.toISOString(),
     });
 
-    const updatedList = await getAllWashes();
-    await renderWashTable(updatedList);
-    await renderWashSummary(updatedList);
+    const updatedWash = { ...washJob, createdAt: shiftedDate.toISOString() };
+    const updatedWashes = await getAllWashes();
+
+    await renderWashTable(updatedWashes);
+    await renderWashSummary(updatedWashes);
 
     const formatted = shiftedDate.toLocaleDateString("th-TH", {
       year: "numeric",
@@ -547,7 +552,6 @@ export async function shiftWashDate(washId, days) {
   }
 }
 
-// ============================ 📤 EXPORT CSV ============================
 async function exportWashToCSV() {
   try {
     showLoading("📤 กำลังส่งออกข้อมูลงานซัก...");

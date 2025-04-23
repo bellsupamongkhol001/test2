@@ -29,36 +29,34 @@ export function formatDate(isoString) {
  * @param {string} prefix - คำขึ้นต้น (เช่น WASH หรืออื่น ๆ)
  * @returns {string} รหัสงานซักในรูปแบบ PREFIX-YYMMDD-XXX
  */
-export async function generateWashId(prefix = "WASH") {
+export async function generateWashId(prefix = "WASHID") {
   const now = new Date();
-  const y = now.getFullYear().toString().slice(0);
+  const y = now.getFullYear().toString().slice(2); // YY
   const m = (now.getMonth() + 1).toString().padStart(2, "0");
   const d = now.getDate().toString().padStart(2, "0");
   const datePart = `${y}${m}${d}`;
-  const counterKey = `${prefix}-${datePart}`;
 
-  const counterRef = doc(db, "WashCounters", counterKey);
-  const washCollection = collection(db, "WashDB");
+  const counterDocRef = doc(db, "WashCounters", `${prefix}-${datePart}`);
+  let counter = 1;
 
-  let currentCounter = 1;
-
-  while (true) {
-    const countPart = currentCounter.toString().padStart(3, "0");
-    const candidateId = `${prefix}-${datePart}-${countPart}`;
-
-    const candidateRef = doc(washCollection, candidateId);
-    const candidateSnap = await getDoc(candidateRef);
-
-    if (!candidateSnap.exists()) {
-      // ✅ บันทึกเลขล่าสุดที่ใช้ไปจริง
-      await setDoc(counterRef, { last: currentCounter });
-      return candidateId;
-    }
-
-    currentCounter++;
+  const snap = await getDoc(counterDocRef);
+  if (snap.exists()) {
+    const data = snap.data();
+    counter = (data?.last || 0) + 1;
   }
-}
 
+  // จำกัดที่ 999
+  if (counter > 999) throw new Error("⚠️ WashID เกินจำนวนที่อนุญาตต่อวัน (999)");
+
+  // สร้าง ID
+  const numberPart = counter.toString().padStart(3, "0");
+  const washId = `${prefix}-${datePart}-${numberPart}`;
+
+  // บันทึก counter ใหม่
+  await setDoc(counterDocRef, { last: counter });
+
+  return washId;
+}
 
 // ============================ ❓ SHOW CONFIRM MODAL ============================
 /**
