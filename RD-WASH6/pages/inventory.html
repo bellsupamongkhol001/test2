@@ -1,0 +1,136 @@
+  <div class="container">
+    <!-- 🔷 HEADER -->
+    <header class="header">
+      <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
+    </header>
+    
+    <!-- 🔍 SEARCH -->
+    <section class="data-section">
+      <div class="header-controls">
+        <button id="btnExportReport" class="btn btn-primary btn-sm">
+          <i class="fas fa-file-export"></i> Export CSV
+        </button>
+        <button id="btnBulkImportAll" class="btn btn-success">
+          <i class="fas fa-database"></i> Import All Uniforms
+        </button> 
+      </div>
+    </section>
+
+    <!-- 🧥 UNIFORM BASE CARDS -->
+    <section class="card-grid" id="uniformBaseList"></section>
+
+    <!-- 🔢 PAGINATION -->
+    <div id="pagination" class="pagination"></div>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 📋 CODE LIST MODAL -->
+  <div class="modal hidden" id="codeListModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-list"></i> Uniform Code Details</h3>
+      </div>
+      <div class="modal-body">
+        <div class="table-panel">
+          <table class="detail-table">
+            <thead>
+              <tr>
+                <th>Uniform Code</th>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="codeListBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeCodeListModal()">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ✅ ASSIGN MODAL -->
+  <div class="modal hidden" id="assignModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-user-plus"></i> Assign Uniform</h3>
+      </div>
+      <form id="assignForm" class="modal-body">
+        <p id="assignUniformInfo" class="form-highlight"></p>
+        <label for="assignUniformCode">Uniform Code</label>
+        <input type="text" id="assignUniformCode" readonly />
+        <label for="assignEmployeeId" class="required">Employee ID</label>
+        <input type="text" id="assignEmployeeId" required />
+        <label for="assignEmployeeName">Employee Name</label>
+        <input type="text" id="assignEmployeeName" readonly />
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check"></i> Confirm
+          </button>
+          <button type="button" class="btn btn-danger" onclick="closeAssignModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ➕ ADD CODE MODAL -->
+  <div class="modal hidden" id="codeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-plus-circle"></i> Add Uniform Code</h3>
+      </div>
+      <form id="codeForm" class="modal-body">
+        <input type="hidden" id="addCodeUniformId" />
+        <label for="addUniformCode">Uniform Code</label>
+        <input type="text" id="addUniformCode" required />
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeAddCodeModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ✅ Bulk Import Modal -->
+  <div class="modal hidden" id="bulkImportModal">
+    <div class="modal-content">
+      <h3><i class="fas fa-layer-group"></i> Bulk Import 2023 & 2024</h3>
+      <form id="bulkImportForm">
+        <input type="hidden" id="bulkUniformId" />
+        <label for="bulkPrefixColor">Color Prefix (Auto)</label>
+        <input type="text" id="bulkPrefixColor" readonly />
+
+        <label for="bulkSize">Size (Auto)</label>
+        <input type="text" id="bulkSize" readonly />
+
+        <p style="margin-top: 12px; font-size: 0.9rem; color: #666;">
+          📌 ระบบจะเพิ่มรหัส <b>ปี 2023 และ 2024 อย่างละ 50 รายการ</b> เช่น<br>
+          <code>W-RD-2023-6XL-001 → 050</code> และ <code>W-RD-2024-6XL-001 → 050</code>
+        </p>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-upload"></i> Generate Codes
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeBulkImportModal()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

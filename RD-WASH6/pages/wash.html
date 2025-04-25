@@ -1,0 +1,202 @@
+<div class="container">
+  <!-- 🌟 Wash Management Dashboard -->
+  <header class="header">
+    <h2><i class="fas fa-soap"></i> Wash Management</h2>
+  </header>
+
+  <!-- 📊 Dashboard Summary -->
+  <section class="dashboard">
+    <div class="card card-total">
+      <div class="icon">📋</div>
+      <div class="info">
+        <div class="title">Total</div>
+        <div id="sumTotal" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-waiting">
+      <div class="icon">⏳</div>
+      <div class="info">
+        <div class="title">Waiting</div>
+        <div id="sumWaiting" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-washing">
+      <div class="icon">🧺</div>
+      <div class="info">
+        <div class="title">Washing</div>
+        <div id="sumWashing" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-completed">
+      <div class="icon">✅</div>
+      <div class="info">
+        <div class="title">Completed</div>
+        <div id="sumCompleted" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-rewash">
+      <div class="icon">🔁</div>
+      <div class="info">
+        <div class="title">Rewash</div>
+        <div id="sumRewash" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-scrap">
+      <div class="icon">🗑️</div>
+      <div class="info">
+        <div class="title">Scrap</div>
+        <div id="sumScrap" class="number">0</div>
+      </div>
+    </div>
+    <div class="card card-history">
+      <div class="icon">📖</div>
+      <div class="info">
+        <div class="title">History</div>
+        <div id="sumHistory" class="number">0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🧺 Wash Job Section -->
+  <section class="data-section">
+    <div class="header-controls">
+      <h3><i class="fas fa-tasks"></i> Current Wash Jobs</h3>
+      <div class="control-table">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search WashID / EmpID / Name  🔍"
+        />
+        <select id="filterStatus">
+          <option value="">All Status</option>
+          <option value="Waiting to Send">Waiting   to Send</option>
+          <option value="Washing">Washing</option>
+          <option value="Completed">Completed</option>
+          <option value="Waiting Rewash #1">Waiting Rewash #1</option>
+          <option value="Scrap">Scrap</option>
+        </select>
+        <button id="btnAddWash" class="btn btn-add">➕ Add Wash</button>
+        <button id="btnExportCSV" class="btn btn-primary">
+          <i class="fas fa-file-export"></i> Export
+        </button>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>WashID</th>
+          <th>Employee</th>
+          <th>UniformID</th>
+          <th>Color</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="washTableBody"></tbody>
+    </table>
+    <div id="pagination" class="pagination"></div>
+  </section>
+
+  <!-- 📖 Wash History Section -->
+  <section class="data-section">
+    <div class="header-controls">
+      <h3><i class="fas fa-history"></i> Wash History</h3>
+      <button id="btnExportWashHistoryCSV" class="btn btn-outline">
+        📤 Export Wash History
+      </button>
+    </div>
+
+    <div id="historyTableWrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Wash ID</th>
+            <th>Uniform Code</th>
+            <th>Employee</th>
+            <th>ESD Result</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody"></tbody>
+      </table>
+    </div>
+    <div id="historyPagination" class="pagination"></div>
+  </section>
+
+  <!-- ✏️ Wash Modal -->
+  <div id="washModal" class="modal" style="display: none">
+    <div class="modal-content">
+      <span id="btnCloseModal" class="close">&times;</span>
+      <h3 id="modalTitle">Add/Edit Wash Job</h3>
+  
+      <div class="floating-label-group">
+        <input id="uniformCode" type="text" placeholder=" " />
+        <label for="uniformCode">UniformID</label>
+      </div>
+  
+      <div class="floating-label-group">
+        <input id="size" type="text" placeholder=" " readonly />
+        <label for="size">Size</label>
+      </div>
+  
+      <div class="floating-label-group">
+        <select id="color" disabled required>
+          <option value="" disabled selected hidden></option>
+        </select>
+
+      </div>
+  
+      <div class="floating-label-group">
+        <input id="empId" type="text" placeholder=" " readonly />
+        <label for="empId">Employee ID</label>
+      </div>
+  
+      <div class="floating-label-group">
+        <input id="empName" type="text" placeholder=" " readonly />
+        <label for="empName">Employee Name</label>
+      </div>
+  
+      <div class="modal-actions">
+        <button id="btnSaveWash" class="btn btn-save">Save</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- ⏳ Loading Overlay -->
+  <div id="loadingOverlay" class="overlay" style="display: none">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <!-- ❓ Confirm Modal -->
+  <div id="confirmModal" class="modal" style="display: none">
+    <div class="modal-content">
+      <p>❓ คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?</p>
+      <div class="modal-actions">
+        <button id="btnConfirmYes" class="btn btn-delete">🗑️ ลบเลย</button>
+        <button id="btnConfirmNo" class="btn btn-cancel">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧪 ESD Modal -->
+  <div id="esdModal" class="modal" style="display: none">
+    <div class="esd-modal-content">
+      <h3>🧪 ESD Testing</h3>
+      <div class="esd-details">
+        <p><strong>Uniform Code:</strong> <span id="esdUniformCode">-</span></p>
+        <p><strong>Employee ID:</strong> <span id="esdEmpId">-</span></p>
+        <p><strong>Employee Name:</strong> <span id="esdEmpName">-</span></p>
+      </div>
+      <div class="esd-actions">
+        <button id="btnPassESD" class="btn-pass">✅ Pass</button>
+        <button id="btnFailESD" class="btn-fail">❌ Fail</button>
+      </div>
+    </div>
+  </div>
+</div>
